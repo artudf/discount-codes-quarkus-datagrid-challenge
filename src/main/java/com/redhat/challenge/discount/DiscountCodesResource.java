@@ -2,7 +2,10 @@ package com.redhat.challenge.discount;
 
 import com.redhat.challenge.discount.model.DiscountCode;
 import com.redhat.challenge.discount.model.DiscountCodeType;
+import io.quarkus.infinispan.client.Remote;
+import org.infinispan.client.hotrod.RemoteCache;
 
+import javax.inject.Inject;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
@@ -12,9 +15,11 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import java.net.URI;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
 @Path("/discounts")
@@ -22,13 +27,21 @@ import java.util.stream.Collectors;
 @Consumes(MediaType.APPLICATION_JSON)
 public class DiscountCodesResource {
 
-    Map<String, DiscountCode> discounts = new HashMap<>();
+    @Inject
+    @Remote("discounts")
+    RemoteCache<String, DiscountCode> discounts;
+
+    //Map<String, DiscountCode> discounts = new HashMap<>();
 
     @POST
     public Response create(DiscountCode discountCode) {
         if (!discounts.containsKey(discountCode.getName())) {
             discountCode.setUsed(0);
-            discounts.put(discountCode.getName(), discountCode);
+            if(discountCode.getExpire() == null){
+                discountCode.setExpire(10);
+            }
+            discounts.put(discountCode.getName(), discountCode,
+                    discountCode.getExpire(), TimeUnit.SECONDS);
             return Response.created(URI.create(discountCode.getName())).build();
         }
 
@@ -45,10 +58,17 @@ public class DiscountCodesResource {
         }
 
         discountCode.setUsed(discountCode.getUsed() + 1);
-        discounts.put(name, discountCode);
-
-        return Response.ok(discountCode).build();
+        discounts.put(name, discountCode,
+                discountCode.getExpire(), TimeUnit.SECONDS);
+        String resp = String.format("%s, %d, %s, %d, %s"
+                                , discountCode.getName()
+                                , discountCode.getUsed()
+                                , discountCode.getEnterprise()
+                                , discountCode.getAmount()
+                                , discountCode.getType().name());
+        return Response.ok(discountCode ).build();
     }
+
 
     @GET
     @Path("/{type}")
