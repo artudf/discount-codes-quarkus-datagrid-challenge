@@ -1,6 +1,9 @@
 # DEVELOPER GAMES
 # CORE DREAM TEAM
 # DATAGRID QUARKUS (Challenge #06)
+##
+Created script to remote call to OCP deploy of the application
+**discountCreatorOCP.sh**
 
 ## Added lifesapn to Cache elements
 New field at the object discountCode to indicate expire in seconds
