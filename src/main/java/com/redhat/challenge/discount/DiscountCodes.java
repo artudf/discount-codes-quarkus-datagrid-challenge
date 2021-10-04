@@ -8,14 +8,16 @@ import java.util.List;
 @RegisterForReflection
 public class DiscountCodes {
    private long totalCount;
+   private long globalUSeCount;
    private List<DiscountCode> discountCodesList;
 
    public DiscountCodes() {
    }
 
-   public DiscountCodes(List<DiscountCode> discountCodesList, long totalCount) {
+   public DiscountCodes(List<DiscountCode> discountCodesList, long totalCount, long globalUSeCount) {
       this.discountCodesList = discountCodesList;
       this.totalCount = totalCount;
+      this.globalUSeCount = globalUSeCount;
    }
 
    public List<DiscountCode> getDiscountCodesList() {
@@ -32,5 +34,13 @@ public class DiscountCodes {
 
    public void setTotalCount(long totalCount) {
       this.totalCount = totalCount;
+   }
+
+   public long getGlobalUSeCount() {
+      return globalUSeCount;
+   }
+
+   public void setGlobalUSeCount(long globalUSeCount) {
+      this.globalUSeCount = globalUSeCount;
    }
 }

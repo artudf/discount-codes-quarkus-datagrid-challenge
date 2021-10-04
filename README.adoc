@@ -1,3 +1,23 @@
+# DEVELOPER GAMES
+# CORE DREAM TEAM
+# DATAGRID QUARKUS (Challenge #06)
+
+## Added lifesapn to Cache elements
+New field at the object discountCode to indicate expire in seconds
+*discounts.put(discountCode.getName(), discountCode,discountCode.getExpire(), TimeUnit.SECONDS);*
+
+## Bonuus 2
+Added new GlobalDiscountCount cache object to manage the count requested
+"globalUSeCount" gives the value requred
+
+## Support to race condition
+We add transactions to caches- READ_COMMIT
+
+
+
+
+
+
 = Challenge 6: Discount Codes Microservices challenge with Quarkus and Red Hat Data Grid
 Álvaro López Medina <alopezme@redhat.com>; Katia Aresti <karesti@redhat.com>
 v1.0, 2021-09
